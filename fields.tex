@@ -1,0 +1,118 @@
+% ============================================================================
+% 这是日常填写时主要编辑的文件。
+%
+% 最重要的使用规则：
+%   1. 一般只编辑本文件，不需要改 main.tex。
+%   2. 把内容写在每个命令最后一对大括号中，例如：
+%        \newcommand{\StudentName}{张三}
+%      请直接修改下面已经存在的命令，不要再复制一条同名的 \newcommand，
+%      否则 LaTeX 会提示“Command ... already defined”。
+%   3. 不填写的栏目请保持空括号 {}，不要删除整行命令。
+%   4. 手动换行使用 \\；另起一段使用 \par。正文通常推荐用 \par，
+%      因为它比连续手动换行更容易保持自然的段落间距。
+%   5. 中文标点可以直接输入。LaTeX 特殊字符需要转义，例如：
+%        百分号 \%   下划线 \_   与号 \&   井号 \#   美元符号 \$
+%        左花括号 \{   右花括号 \}   波浪号 \textasciitilde{}
+%   6. 页码范围中的连接号建议写成两个短横线，例如 15--23。
+%   7. 网址请写成 \url{https://example.com/path}。这样长网址可以自动换行，
+%      且网址中的下划线、百分号等字符不需要逐个转义。
+%   8. 所有填写文字固定使用五号字。正文增多时表格会自动增高并跨页，
+%      不会缩小字号，也不会裁切文字；通常不需要手工插入 \newpage。
+%   9. 不要在填写内容中加入 \small、\footnotesize、\resizebox 等缩放命令。
+%      中文会自动使用中文主字体，英文和数字会自动使用 Times 系列主字体。
+%  10. 插图请先上传到 images/ 文件夹，再用本文件下方介绍的 \ReportFigure。
+% ============================================================================
+
+% -------------------- 第一页：个人与论文信息 --------------------
+% 学生姓名，对应第一行左侧空白单元格。
+\newcommand{\StudentName}{}
+% 学号，对应第一行右侧空白单元格。
+\newcommand{\StudentID}{}
+% 所在部院系，例如“地理科学学部”。
+\newcommand{\Department}{}
+% 专业，例如“地理科学”。
+\newcommand{\Major}{}
+% 指导教师姓名。这里始终保持五号字；字段较窄，请尽量填写简短姓名。
+\newcommand{\AdvisorName}{}
+% 指导教师职称，例如“教授”或“副教授”。
+\newcommand{\AdvisorTitle}{}
+% 指导教师单位。这里始终保持五号字；若名称很长，请使用学校认可的简称。
+\newcommand{\AdvisorUnit}{}
+% 毕业论文题目。
+\newcommand{\ThesisTitle}{}
+
+% -------------------- 第一页：开题报告正文 --------------------
+% 选题依据及研究内容：可包含国内外研究现状、初步设想、突破点、
+% 研究目标、预期成果和可行性论述等。内容可以超过一页。
+\newcommand{\BasisAndContent}{}
+% 理论意义和实践意义。
+\newcommand{\Significance}{}
+% 论文撰写过程中拟采取的方法和手段。
+\newcommand{\Methods}{}
+
+% -------------------- 后续栏目：提纲、进度与意见 --------------------
+% 这些栏目不再固定出现在第二页；前文内容增长后，它们会自动顺延。
+% 论文撰写提纲。建议用 \par 分隔各级标题或各章节。
+\newcommand{\Outline}{}
+% 计划进度及其内容。
+\newcommand{\Schedule}{}
+% 参考文献。单元格默认完全留空；填写后只显示你定义的文献条目。
+%
+% 推荐使用下面的交叉引用方式，不要自己手写 [1]、[2]：
+%   第一步：在正文中需要引用的位置写 \CiteRef{文献键}。
+%           例如：已有研究讨论了该问题\CiteRef{zhang2025}。
+%   第二步：在 \References 中用相同的键定义文献：
+%           \ReferenceItem{zhang2025}{张三. 文献题名[J]. 期刊, 2025.}
+%   第三步：正常编译。编号由参考文献条目的排列顺序自动生成。
+%
+% “文献键”只用于 LaTeX 内部匹配，不会印在最终 PDF 上。建议仅使用
+% 英文字母、数字、短横线和冒号，例如 zhang2025、smith-book-2024。
+% 每篇文献的键必须唯一，正文和文末的拼写必须完全相同。
+% 首次编译若暂时显示 [??]，再编译一次即可；Overleaf 通常会自动处理。
+\newcommand{\References}{}
+% 教师指导意见。请勿在此重复填写“意见：”和签字日期，它们已由 main.tex 绘制。
+\newcommand{\AdvisorComments}{}
+% 部院系意见。负责人签字、公章和日期区域已由 main.tex 绘制。
+\newcommand{\DepartmentComments}{}
+
+% -------------------- 如何插入图片 --------------------
+% 支持 PNG、JPG 和 PDF。推荐使用只含英文字母、数字、短横线的文件名，
+% 例如 research-area.png；请不要在文件名中加入空格。
+%
+% 第一步：在 Overleaf 左侧文件区进入 images/，上传图片。
+% 第二步：在任意正文命令的大括号内插入：
+%   \ReportFigure{research-area}{research-area.png}{研究区位置}
+%
+% 第一个参数 research-area 是图片键，只用于交叉引用，每张图必须唯一；
+% 第二个参数是 images/ 目录下的文件名；第三个参数是图题。
+%
+% 默认图片宽度为正文栏的 82%。需要调小时，在最前面加可选宽度：
+%   \ReportFigure[0.65\linewidth]{model-flow}{model-flow.pdf}{研究流程}
+%
+% 在图片前后的正文中引用图号：
+%   研究流程如\FigureRef{model-flow}所示。
+% 编译后会自动显示为“研究流程如图 1 所示”。若首次出现“??”，再编译一次。
+%
+% 图片是一个不可拆开的整体。如果图片恰好放不下当前页，LaTeX 会把它移到
+% 下一页；不要把宽度设得超过 \linewidth，也不要在图片前手工加 \newpage。
+
+% -------------------- 完整填写示例 --------------------
+% 下面全部是注释，不会出现在 PDF 中。
+% 需要参考时可照着写；实际使用时仍建议直接填写上面的空括号。
+%
+% \renewcommand{\StudentName}{张三}
+% \renewcommand{\StudentID}{202311010001}
+% \renewcommand{\Department}{地理科学学部}
+% \renewcommand{\Major}{地理科学}
+% \renewcommand{\ThesisTitle}{示例论文题目}
+% \renewcommand{\BasisAndContent}{%
+%   已有研究表明该方法有效\CiteRef{zhang2025}。\par
+%   另一项研究采用了不同方法\CiteRef{smith2024}。\par
+%   项目网页为 \url{https://example.com/a/very/long/path}。%
+%   研究区如\FigureRef{study-area}所示。\par
+%   \ReportFigure[0.70\linewidth]{study-area}{study-area.png}{研究区位置}%
+% }
+% \renewcommand{\References}{%
+%   \ReferenceItem{zhang2025}{张三, 李四. 文献题名[J]. 期刊名称, 2025, 10(2): 1--10.}
+%   \ReferenceItem{smith2024}{Smith J. Book Title[M]. Beijing: Publisher, 2024.}
+% }

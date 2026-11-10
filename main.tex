@@ -1,0 +1,476 @@
+% !TeX program = pdflatex
+% ============================================================================
+% 北京师范大学本科生毕业论文（设计）开题报告 LaTeX 模板
+%
+% 这个文件负责版式，一般不需要修改。日常填写只编辑 fields.tex。
+%
+% 与旧版“固定两页底图”不同，本版使用真正的可分页表格：
+%   1. 每个正文栏目保留原 Word 的最小行高；
+%   2. 内容超过最小行高时，单元格会自动向下增长；
+%   3. 单个栏目可在页底拆分，并在下一页继续；
+%   4. 后续栏目自动顺延，最终页数随内容增加；
+%   5. 续页仍使用相同的表格宽度、页边距和竖向边框。
+%
+% 字体说明：所有用户填写文字固定为五号（10.5 pt），行距约 15.6 pt。
+% 默认 pdfLaTeX 使用 Overleaf 自带的宋体类 CJK 字体和 Times 兼容字体。
+% 如需严格使用 ZIP 内的宋体、黑体和 Times New Roman，可在 Overleaf 中
+% 手动切换到 XeLaTeX；两种编译方式的具体区别见 README.md。
+% ============================================================================
+% 允许 Computer Modern 数学符号按 10.5 bp 连续缩放，避免网址排版产生字号替代警告。
+\RequirePackage{fix-cm}
+\documentclass{article}
+
+% -------------------- 编译器与字体 --------------------
+\usepackage{iftex}
+\ifPDFTeX
+  % pdfLaTeX 路径无需额外字体文件，可直接在 Overleaf 编译。
+  \usepackage{CJKutf8}
+  \usepackage{newtxtext}
+  \newenvironment{ChineseDocument}{\begin{CJK*}{UTF8}{gbsn}}{\end{CJK*}}
+  \newcommand{\SongFamily}{\CJKfamily{gbsn}}
+  \newcommand{\TitleFamily}{\CJKfamily{gbsn}\bfseries}
+\else
+  \ifXeTeX
+    \usepackage{fontspec}
+    \usepackage{xeCJK}
+
+    % 若 fonts/ 中存在四个 Times New Roman 文件，则优先使用它们。
+    % 文件名和放置方法见 fonts/README.md。
+    \IfFileExists{fonts/times.ttf}{%
+      \setmainfont{times.ttf}[
+        Path=fonts/,
+        BoldFont=timesbd.ttf,
+        ItalicFont=timesi.ttf,
+        BoldItalicFont=timesbi.ttf
+      ]
+    }{%
+      \IfFontExistsTF{Times New Roman}{%
+        \setmainfont{Times New Roman}
+      }{%
+        \setmainfont{texgyretermes-regular.otf}[
+          BoldFont=texgyretermes-bold.otf,
+          ItalicFont=texgyretermes-italic.otf,
+          BoldItalicFont=texgyretermes-bolditalic.otf
+        ]
+      }
+    }
+
+    % 若 fonts/ 中存在 SimSun 文件，则优先使用；否则使用 Overleaf 自带宋体。
+    \IfFileExists{fonts/simsun.ttc}{%
+      \setCJKmainfont[Path=fonts/,FontIndex=0]{simsun.ttc}
+    }{%
+      \IfFileExists{fonts/simsun.ttf}{%
+        \setCJKmainfont[Path=fonts/]{simsun.ttf}
+      }{%
+        \IfFontExistsTF{SimSun}{%
+          \setCJKmainfont{SimSun}
+        }{%
+          \setCJKmainfont{FandolSong-Regular.otf}[
+            BoldFont=FandolSong-Bold.otf
+          ]
+        }
+      }
+    }
+
+    % 报告标题使用黑体。ZIP 中已放入 simhei.ttf；缺失时才回退到 FandolHei。
+    \IfFileExists{fonts/simhei.ttf}{%
+    
+      \setCJKfamilyfont{bnuhei}[Path=fonts/, AutoFakeBold=4.5]{simhei.ttf}
+    }{%
+      \setCJKfamilyfont{bnuhei}{FandolHei-Regular.otf}
+    }
+    \newenvironment{ChineseDocument}{}{}
+    \newcommand{\SongFamily}{\rmfamily}
+    \newcommand{\TitleFamily}{\CJKfamily{bnuhei}}
+  \else
+    \PackageError{bnu-opening-report}
+      {Unsupported compiler}
+      {Please select pdfLaTeX or XeLaTeX in Overleaf Settings.}
+  \fi
+\fi
+
+% -------------------- 页面与宏包 --------------------
+% 页面和表格几何尺寸均来自原 Word 导出 PDF 的实测值。
+% 左右边距之和使正文宽度精确为 430.32 bp；上下边距均为 72 bp。
+\usepackage[
+  paperwidth=595.44bp,
+  paperheight=841.92bp,
+  left=82.32bp,
+  right=82.80bp,
+  top=72bp,
+  bottom=72bp,
+  headheight=0pt,
+  headsep=0pt,
+  footskip=0pt
+]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{ragged2e}
+\usepackage{xurl}
+\urlstyle{same}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\topskip}{0pt}
+\raggedbottom
+
+% 所有可填写内容都集中在 fields.tex。
+\input{fields.tex}
+
+% -------------------- 字号与通用命令 --------------------
+% 五号 = 10.5 pt。这里不用随内容缩小字号，正文增多时由表格自动增高。
+% \normalfont 会先清除前面可能遗留的粗体或斜体，再选择中文宋体和英文 Times。
+% 因而 fields.tex 中新增的中文、英文和数字都会继承同一套五号正文样式。
+\newcommand{\BodyStyle}{\normalfont\SongFamily\fontsize{10.5pt}{15.6pt}\selectfont}
+% 左栏保持五号，只略收紧行距，使完整栏目名能在窄栏中自然排下。
+\newcommand{\LabelStyle}{\normalfont\SongFamily\fontsize{10.5pt}{13.2pt}\selectfont}
+% 三号 = 16 pt；XeLaTeX 下调用 simhei.ttf，pdfLaTeX 下使用可用的粗黑近似。
+\newcommand{\TitleStyle}{\normalfont\TitleFamily\fontsize{16pt}{22pt}\selectfont}
+
+% -------------------- 参考文献交叉引用 --------------------
+% 前文写 \CiteRef{文献键}；参考文献栏写
+% \ReferenceItem{相同文献键}{完整条目}。正常重复编译后会自动对应编号。
+\newcounter{reportref}
+\newcommand{\CiteRef}[1]{\mbox{[\ref{bnu-ref:#1}]}}
+\newcommand{\ReferenceItem}[2]{%
+  \refstepcounter{reportref}%
+  \label{bnu-ref:#1}%
+  \par\noindent
+  \hangindent=2.5em
+  \hangafter=1
+  [\thereportref]\ #2\par
+}
+
+% -------------------- 图片与图号 --------------------
+% 用法：把图片上传到 images/，再在 fields.tex 的任意正文栏目中写：
+% \ReportFigure{figure-key}{file-name.png}{图题}
+% 可选参数控制宽度，例如：\ReportFigure[0.68\linewidth]{key}{a.pdf}{图题}
+% 前文可用 \FigureRef{figure-key} 自动引用图号。
+\newcounter{reportfigure}
+\newcommand{\FigureRef}[1]{图~\ref{bnu-fig:#1}}
+\newcommand{\ReportFigure}[4][0.82\linewidth]{%
+  \par\medskip
+  \refstepcounter{reportfigure}%
+  \label{bnu-fig:#2}%
+  \begin{center}
+    \includegraphics[width=#1]{images/#3}\par
+    \vspace{2pt}%
+    图~\thereportfigure\quad #4\par
+  \end{center}
+  \medskip
+}
+
+% -------------------- 首页固定信息表 --------------------
+% 首页标题区域从 y=72 bp 延伸到 y=126.48 bp，高度为 54.48 bp。
+\newcommand{\TitleBlock}{%
+  \vbox to 54.48bp{%
+    \vfil
+    \hbox to \textwidth{\hfil
+      {\TitleStyle\bfseries 北京师范大学本科生毕业论文（设计）开题报告}%
+    \hfil}%
+    \vfil
+  }%
+  \nointerlineskip
+}
+
+% 固定标签与用户字段都使用五号字。短字段保持五号，不再自动缩小。
+\newcommand{\HeaderLabel}[3]{%
+  \node[anchor=center,inner sep=0pt,outer sep=0pt]
+    at (#1,#2) {{\BodyStyle #3}};
+}
+\newcommand{\HeaderField}[4]{%
+  \node[anchor=center,inner sep=0pt,outer sep=0pt]
+    at (#1,#2) {\makebox[#3bp][c]{{\BodyStyle #4}}};
+}
+
+% 表头总高度 103.68 bp，对应原 Word 中 y=126.48--230.16。
+\newcommand{\HeaderTable}{%
+  \hbox to \textwidth{%
+    \begin{tikzpicture}[x=1bp,y=-1bp,baseline=(current bounding box.south)]
+      \path[use as bounding box] (0,0) rectangle (430.32,103.68);
+      \tikzset{bnu rule/.style={draw=black,line width=.48bp}}
+
+      % 外框与五条横向分隔线。
+      \draw[bnu rule] (0,0) rectangle (430.32,103.68);
+      \draw[bnu rule] (0,20.88)--(430.32,20.88);
+      \draw[bnu rule] (0,41.52)--(430.32,41.52);
+      \draw[bnu rule] (0,62.16)--(430.32,62.16);
+      \draw[bnu rule] (0,82.80)--(430.32,82.80);
+
+      % 前四行按原 Word 的合并单元格绘制竖线。
+      \draw[bnu rule] (79.20,0)--(79.20,82.80);
+      \draw[bnu rule] (216.00,0)--(216.00,62.16);
+      \draw[bnu rule] (291.12,0)--(291.12,62.16);
+      \draw[bnu rule] (136.80,41.52)--(136.80,62.16);
+      \draw[bnu rule] (361.20,41.52)--(361.20,62.16);
+
+      % 第一行：姓名、学号。
+      \HeaderLabel{39.60}{10.44}{学生姓名}
+      \HeaderField{147.60}{10.44}{126}{\StudentName}
+      \HeaderLabel{253.56}{10.44}{学\quad 号}
+      \HeaderField{360.72}{10.44}{128}{\StudentID}
+
+      % 第二行：院系、专业。
+      \HeaderLabel{39.60}{31.20}{所在部院系}
+      \HeaderField{147.60}{31.20}{126}{\Department}
+      \HeaderLabel{253.56}{31.20}{专\quad 业}
+      \HeaderField{360.72}{31.20}{128}{\Major}
+
+      % 第三行：指导教师信息。
+      \HeaderLabel{39.60}{51.84}{指导教师姓名}
+      \HeaderField{108.00}{51.84}{47}{\AdvisorName}
+      \HeaderLabel{176.40}{51.84}{指导教师职称}
+      \HeaderField{253.56}{51.84}{64}{\AdvisorTitle}
+      \HeaderLabel{326.16}{51.84}{指导教师单位}
+      \HeaderField{395.76}{51.84}{58}{\AdvisorUnit}
+
+      % 第四、五行：论文题目与“开题报告内容”。
+      \HeaderLabel{39.60}{72.48}{毕业论文题目}
+      \HeaderField{254.76}{72.48}{330}{\ThesisTitle}
+      \HeaderLabel{215.16}{93.24}{开\quad 题\quad 报\quad 告\quad 内\quad 容}
+    \end{tikzpicture}%
+    \hss
+  }%
+  \nointerlineskip
+}
+
+% -------------------- 可跨页正文单元格 --------------------
+% 用户要求正文区左栏变窄：这里设为 48 bp，约能容纳两到三个五号汉字。
+% 首页个人信息表仍保持原 Word 的列宽，不受这里影响。
+\newcommand{\DrawRowDivider}{%
+  \draw[line width=.48bp]
+    ([xshift=48bp]frame.north west)--([xshift=48bp]frame.south west);%
+}
+\newcommand{\DrawFullRowLabel}[1]{%
+  \node[align=center,text width=38.4bp,inner sep=0pt,outer sep=0pt]
+    at ([xshift=24bp]frame.west) {{\LabelStyle #1}};%
+}
+% enhanced jigsaw 会在断页处省略横边框，因此在 overlay 中显式补画。
+\newcommand{\DrawBreakTopRule}{%
+  \draw[line width=.48bp] (frame.north west)--(frame.north east);%
+}
+\newcommand{\DrawBreakBottomRule}{%
+  \draw[line width=.48bp] (frame.south west)--(frame.south east);%
+}
+
+% 先按加宽后的右栏真实宽度排一次内容，只测量高度而不输出。
+% 测量时临时关闭 \label 写入，避免参考文献标签被重复写入辅助文件。
+\newsavebox{\BnuRowMeasureBox}
+\newsavebox{\BnuLabelMeasureBox}
+\newdimen\BnuRowMeasuredHeight
+\newdimen\BnuLabelMeasuredHeight
+\newdimen\BnuMinimumRowHeight
+\newcounter{bnumeasureref}
+\newcommand{\MeasureReportRow}[1]{%
+  \begingroup
+    \renewcommand{\label}[1]{}%
+    % 测量参考文献时保留真实的编号宽度和悬挂缩进，但不写入正式标签。
+    \setcounter{bnumeasureref}{0}%
+    \renewcommand{\ReferenceItem}[2]{%
+      \stepcounter{bnumeasureref}%
+      \par\noindent
+      \hangindent=2.5em
+      \hangafter=1
+      [\arabic{bnumeasureref}]\ ##2\par
+    }%
+    % 图片在测量阶段照常占位，但不增加正式图号，也不写入标签。
+    \renewcommand{\ReportFigure}[4][0.82\linewidth]{%
+      \par\medskip
+      \begin{center}
+        \includegraphics[width=##1]{images/##3}\par
+        \vspace{2pt}图~00\quad ##4\par
+      \end{center}
+      \medskip
+    }%
+    \setbox\BnuRowMeasureBox=\vbox{%
+      \hsize=370.80bp
+      \BodyStyle\justifying
+      #1\par
+    }%
+    % 7.92 bp = 上下内边距与上下边框的总高度。
+    \global\BnuRowMeasuredHeight=\dimexpr
+      \ht\BnuRowMeasureBox+\dp\BnuRowMeasureBox+7.92bp\relax
+  \endgroup
+}
+
+% 窄栏中的完整栏目名也参与高度测量，避免栏目名被裁切。
+\newcommand{\MeasureRowLabel}[1]{%
+  \begingroup
+    \setbox\BnuLabelMeasureBox=\vbox{%
+      \hsize=38.4bp
+      \LabelStyle\centering
+      #1\par
+    }%
+    \global\BnuLabelMeasuredHeight=\dimexpr
+      \ht\BnuLabelMeasureBox+\dp\BnuLabelMeasureBox+7.92bp\relax
+  \endgroup
+}
+
+% 所有正文行共用的边框与内边距。
+% toprule/bottomrule at break 强制跨页处同时出现页底线和下一页页首线。
+\tcbset{bnu report box/.style={%
+  enhanced jigsaw,
+  width=\linewidth,
+  colback=white,
+  colframe=black,
+  boxrule=.48bp,
+  toprule at break=.48bp,
+  bottomrule at break=.48bp,
+  topsep at break=3.48bp,
+  bottomsep at break=3.48bp,
+  sharp corners,
+  boxsep=0pt,
+  left=53.28bp,
+  right=5.28bp,
+  top=3.48bp,
+  bottom=3.48bp,
+  before skip=0pt,
+  after skip=0pt,
+  fontupper=\BodyStyle,
+  fontlower=\BodyStyle
+}}
+
+% 参数：#1 完整栏目名；#2 原 Word 最小行高；#3 内容。
+% 每一个跨页片段都重复完整栏目名，不再改成缩写或添加“（续）”。
+\newcommand{\ReportRow}[3]{%
+  \MeasureReportRow{#3}%
+  \MeasureRowLabel{#1}%
+  \BnuMinimumRowHeight=#2\relax
+  \ifdim\BnuLabelMeasuredHeight>\BnuMinimumRowHeight
+    \BnuMinimumRowHeight=\BnuLabelMeasuredHeight
+  \fi
+  \ifdim\BnuRowMeasuredHeight>\BnuMinimumRowHeight
+    % 所有跨页片段都延伸到该页底部，保证完整栏目名有足够高度。
+    \tcbset{bnu current row sizing/.style={%
+      breakable,natural height,height fixed for=all}}%
+  \else
+    \tcbset{bnu current row sizing/.style={unbreakable,height=\BnuMinimumRowHeight}}%
+  \fi
+  \begin{tcolorbox}[
+    bnu report box,
+    bnu current row sizing,
+    overlay unbroken={\DrawRowDivider\DrawFullRowLabel{#1}},
+    overlay first={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakBottomRule},
+    overlay middle={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakTopRule\DrawBreakBottomRule},
+    overlay last={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakTopRule}
+  ]
+    \justifying #3\par
+  \end{tcolorbox}%
+}
+
+% 意见栏使用 tcolorbox 的上下两部分：上部只放“意见：”和实际意见，
+% 下部固定放审批、签字和日期。space to upper 把下部可靠地推到单元格底端。
+\newcommand{\ReportOpinionRow}[4]{%
+  \MeasureReportRow{#3\par\vspace{6pt}#4}%
+  \MeasureRowLabel{#1}%
+  \BnuMinimumRowHeight=#2\relax
+  \ifdim\BnuLabelMeasuredHeight>\BnuMinimumRowHeight
+    \BnuMinimumRowHeight=\BnuLabelMeasuredHeight
+  \fi
+  \ifdim\BnuRowMeasuredHeight>\BnuMinimumRowHeight
+    \tcbset{bnu current row sizing/.style={%
+      breakable,natural height,height fixed for=all}}%
+  \else
+    \tcbset{bnu current row sizing/.style={unbreakable,height=\BnuMinimumRowHeight}}%
+  \fi
+  \begin{tcolorbox}[
+    bnu report box,
+    bnu current row sizing,
+    space to upper,
+    lower separated=false,
+    segmentation empty,
+    middle=0pt,
+    overlay unbroken={\DrawRowDivider\DrawFullRowLabel{#1}},
+    overlay first={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakBottomRule},
+    overlay middle={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakTopRule\DrawBreakBottomRule},
+    overlay last={\DrawRowDivider\DrawFullRowLabel{#1}\DrawBreakTopRule}
+  ]
+    \justifying #3\par
+    \tcblower
+    #4\par
+  \end{tcolorbox}%
+}
+
+\newcommand{\AdvisorTop}{%
+  \vspace{6pt}
+  \noindent 意见：\par
+  \AdvisorComments
+}
+\newcommand{\AdvisorBottom}{%
+  是否同意开题：\hspace{0.5em}\rule{46bp}{.48bp}\hspace{.8em}（是、否）\par
+  \vspace{6pt}
+  指导教师签字：\hfill
+  20\hspace{1.2em}年\hspace{1.2em}月\hspace{1.2em}日
+  \vspace{6pt}
+}
+
+\newcommand{\DepartmentTop}{%
+  \par
+  \DepartmentComments
+}
+\newcommand{\DepartmentBottom}{%
+  \centering
+  部院系毕业论文工作小组负责人（单位公章）：\par
+  \vspace{6pt}
+  \hfill 20\hspace{1.2em}年\hspace{1.2em}月\hspace{1.2em}日
+  \vspace{6pt}
+}
+
+\begin{document}
+\begin{ChineseDocument}
+\TitleBlock
+\HeaderTable
+
+% 以下最小行高均直接来自原 Word；只限制“至少多高”，不限制最大高度。
+\ReportRow
+  {选题依据及研究内容（国内、外研究现状，初步设想及突破点；研究目标、预期成果，及可行性论述等）}
+  {246.48bp}
+  {\BasisAndContent}
+
+\ReportRow
+  {理论和实践意义}
+  {132.24bp}
+  {\Significance}
+
+\ReportRow
+  {论文撰写过程中拟采取的方法和手段}
+  {148.08bp}
+  {\Methods}
+
+\ReportRow
+  {论文撰写提纲}
+  {163.92bp}
+  {\Outline}
+
+\ReportRow
+  {计划进度及其内容}
+  {115.44bp}
+  {\Schedule}
+
+% 参考文献编号在这一栏开始时从 1 重新计数。
+\setcounter{reportref}{0}
+\ReportRow
+  {参考文献}
+  {152.40bp}
+  {\References}
+
+\ReportOpinionRow
+  {教师指导意见（针对选题、研究方法、计划进度等的意见和建议）}
+  {134.40bp}
+  {\AdvisorTop}
+  {\AdvisorBottom}
+
+% 部院系意见只保留原 Word 最小行高，不再为了撑满最后一页而额外加长。
+\ReportOpinionRow
+  {部院系意见}
+  {109.68bp}
+  {\DepartmentTop}
+  {\DepartmentBottom}
+
+\vspace{2bp}
+{\BodyStyle 注：此表格可延长加页。}\par
+\end{ChineseDocument}
+\end{document}
