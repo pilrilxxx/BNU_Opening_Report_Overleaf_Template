@@ -371,7 +371,7 @@
   \fi
   \ifdim\BnuRowMeasuredHeight>\BnuMinimumRowHeight
     \tcbset{bnu current row sizing/.style={%
-      breakable,natural height,height fixed for=all}}%
+      breakable,natural height,height fixed for=first and middle}}%
   \else
     \tcbset{bnu current row sizing/.style={unbreakable,height=\BnuMinimumRowHeight}}%
   \fi
@@ -399,6 +399,7 @@
   \AdvisorComments
 }
 \newcommand{\AdvisorBottom}{%
+  \vspace{15pt}
   是否同意开题：\hspace{0.5em}\rule{46bp}{.48bp}\hspace{.8em}（是、否）\par
   \vspace{6pt}
   指导教师签字：\hfill
