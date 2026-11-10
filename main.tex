@@ -343,9 +343,8 @@
     \BnuMinimumRowHeight=\BnuLabelMeasuredHeight
   \fi
   \ifdim\BnuRowMeasuredHeight>\BnuMinimumRowHeight
-    % 所有跨页片段都延伸到该页底部，保证完整栏目名有足够高度。
     \tcbset{bnu current row sizing/.style={%
-      breakable,natural height,height fixed for=all}}%
+      breakable,natural height,height fixed for=first and middle}}%
   \else
     \tcbset{bnu current row sizing/.style={unbreakable,height=\BnuMinimumRowHeight}}%
   \fi
